@@ -40,7 +40,7 @@ const Sidebar = () => {
           <div className="sidebar-brand-icon">
             <TrendingUp size={18} />
           </div>
-          <span className="sidebar-brand-name">FinTrack</span>
+          <span className="sidebar-brand-name">Zorvyn Finance</span>
         </div>
 
         <div className="sidebar-divider" />
@@ -67,14 +67,6 @@ const Sidebar = () => {
             </NavLink>
           ))}
         </nav>
-
-        {/* Bottom tag */}
-        <div className="sidebar-footer">
-          <div className="sidebar-footer-card">
-            <p className="sidebar-footer-title">Finance Dashboard</p>
-            <p className="sidebar-footer-sub">v1.0 · 2024</p>
-          </div>
-        </div>
       </aside>
     </>
   );

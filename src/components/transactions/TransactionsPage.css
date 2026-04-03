@@ -1,0 +1,12 @@
+.txn-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ===== FORM ERROR ===== */
+.form-error {
+  font-size: 0.72rem;
+  color: var(--accent-red);
+  margin-top: 0.1rem;
+}

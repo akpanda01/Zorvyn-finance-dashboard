@@ -24,7 +24,7 @@ const Topbar = () => {
     <header className="topbar">
       {/* Left: Page title */}
       <div className="topbar-left">
-        <h1 className="topbar-title">{current.title}</h1>
+        <h2 className="topbar-title">{current.title}</h2>
         <p className="topbar-sub">{current.sub}</p>
       </div>
 

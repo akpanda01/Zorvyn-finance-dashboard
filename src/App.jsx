@@ -3,16 +3,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { ThemeProvider } from "./context/themeContext";
 import { AppProvider } from "./context/AppContext";
 import "./App.css";
-
-// Layout
 import Sidebar from "./components/layout/Sidebar";
 import Topbar  from "./components/layout/Topbar";
-
-// Pages
 import Dashboard        from "./pages/Dashboard";
-import TransactionsPage from "./pages/TransactionsPage";
-import InsightsPage     from "./pages/InsightsPage";
-
+import TransactionsPage from "./components/transactions/TransactionsPage";
+import InsightsPage     from "./components/insights/InsightsPage";
 const AppShell = () => {
   return (
     <div className="app-shell">
