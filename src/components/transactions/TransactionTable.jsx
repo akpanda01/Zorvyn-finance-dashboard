@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Pencil, Trash2, ArrowUpDown, Download, Plus } from "lucide-react";
 import { useApp, ROLES } from "../../context/AppContext";
 import { CATEGORY_COLORS } from "../../data/mockData";
@@ -13,7 +13,20 @@ const TransactionTable = () => {
   } = useApp();
 
   const [exportOpen, setExportOpen] = useState(false);
-  const isAdmin = role === ROLES.ADMIN;
+  const exportRef = useRef(null);
+  const isAdmin   = role === ROLES.ADMIN;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!exportOpen) return;
+    const handler = (e) => {
+      if (exportRef.current && !exportRef.current.contains(e.target)) {
+        setExportOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [exportOpen]);
 
   const handleEdit = (txn) => {
     setEditing(txn);
@@ -30,14 +43,20 @@ const TransactionTable = () => {
 
   const getSortIcon = (field) => {
     const active =
-      (field === "date"   && filters.sortBy.startsWith("date"))   ||
+      (field === "date"   && filters.sortBy.startsWith("date")) ||
       (field === "amount" && filters.sortBy.startsWith("amount"));
-    return (
-      <ArrowUpDown
-        size={12}
-        style={{ opacity: active ? 1 : 0.35 }}
-      />
-    );
+    return <ArrowUpDown size={12} style={{ opacity: active ? 1 : 0.35 }} />;
+  };
+
+  // ── export handlers called directly from onClick ──────────────────────────
+  const handleExportCSV = () => {
+    setExportOpen(false);
+    exportToCSV(filteredTransactions);
+  };
+
+  const handleExportJSON = () => {
+    setExportOpen(false);
+    exportToJSON(filteredTransactions);
   };
 
   return (
@@ -49,29 +68,31 @@ const TransactionTable = () => {
             Showing <span>{filteredTransactions.length}</span> transactions
           </p>
         </div>
+
         <div className="txn-toolbar-right">
 
-          {/* Export */}
-          <div className="export-wrap">
+          {/* Export dropdown */}
+          <div className="export-wrap" ref={exportRef}>
             <button
               className="btn btn-ghost"
               onClick={() => setExportOpen((p) => !p)}
             >
               <Download size={14} /> Export
             </button>
+
             {exportOpen && (
               <div className="export-dropdown">
                 <button
                   className="export-dropdown-btn"
-                  onClick={() => { exportToCSV(filteredTransactions); setExportOpen(false); }}
+                  onClick={handleExportCSV}
                 >
-                  Export CSV
+                  📄 Export CSV
                 </button>
                 <button
                   className="export-dropdown-btn"
-                  onClick={() => { exportToJSON(filteredTransactions); setExportOpen(false); }}
+                  onClick={handleExportJSON}
                 >
-                  Export JSON
+                  📋 Export JSON
                 </button>
               </div>
             )}
@@ -99,19 +120,13 @@ const TransactionTable = () => {
           <table className="txn-table">
             <thead>
               <tr>
-                <th
-                  className="sortable"
-                  onClick={() => handleSort("date")}
-                >
+                <th className="sortable" onClick={() => handleSort("date")}>
                   <span className="th-inner">Date {getSortIcon("date")}</span>
                 </th>
                 <th>Description</th>
                 <th>Category</th>
                 <th>Type</th>
-                <th
-                  className="sortable"
-                  onClick={() => handleSort("amount")}
-                >
+                <th className="sortable" onClick={() => handleSort("amount")}>
                   <span className="th-inner">Amount {getSortIcon("amount")}</span>
                 </th>
                 {isAdmin && <th>Actions</th>}
@@ -120,13 +135,8 @@ const TransactionTable = () => {
             <tbody>
               {filteredTransactions.map((txn, i) => (
                 <tr key={txn.id} className={`animate-fade-in delay-${Math.min(i + 1, 5)}`}>
-
                   <td className="td-date">{formatDate(txn.date)}</td>
-
-                  <td className="td-description">
-                    <p>{txn.description}</p>
-                  </td>
-
+                  <td className="td-description"><p>{txn.description}</p></td>
                   <td>
                     <span className="td-category-chip">
                       <span
@@ -136,18 +146,15 @@ const TransactionTable = () => {
                       {txn.category}
                     </span>
                   </td>
-
                   <td>
                     <span className={`badge badge-${txn.type}`}>
                       {txn.type.charAt(0).toUpperCase() + txn.type.slice(1)}
                     </span>
                   </td>
-
                   <td className={`td-amount td-amount--${txn.type}`}>
                     {txn.type === "income" ? "+" : "−"}
                     {formatCurrency(txn.amount)}
                   </td>
-
                   {isAdmin && (
                     <td>
                       <div className="td-actions">
@@ -168,7 +175,6 @@ const TransactionTable = () => {
                       </div>
                     </td>
                   )}
-
                 </tr>
               ))}
             </tbody>
@@ -203,10 +209,7 @@ const TransactionTable = () => {
                 </span>
                 {isAdmin && (
                   <div className="td-actions">
-                    <button
-                      className="td-action-btn"
-                      onClick={() => handleEdit(txn)}
-                    >
+                    <button className="td-action-btn" onClick={() => handleEdit(txn)}>
                       <Pencil size={13} />
                     </button>
                     <button
