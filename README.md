@@ -1,4 +1,5 @@
-# FinTrack — Finance Dashboard
+
+# Zorvyn Finance — Finance Dashboard
 
 > A clean, interactive, and fully responsive personal finance dashboard built with **React + Vite**. Track income, expenses, and spending patterns through live visualisations and dynamically generated insights — all in the browser, no backend required.
 
@@ -28,7 +29,7 @@
 
 ## Overview
 
-FinTrack is a single-page application that simulates a personal finance dashboard. It was built as a frontend assignment to demonstrate UI design thinking, component architecture, state management, and attention to user experience.
+Zorvyn Finance is a single-page application that simulates a personal finance dashboard. It was built as a frontend assignment to demonstrate UI design thinking, component architecture, state management, and attention to user experience.
 
 The app allows users to:
 
